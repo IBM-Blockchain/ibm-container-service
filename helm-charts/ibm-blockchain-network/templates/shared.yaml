@@ -1,3 +1,4 @@
+---
 {{- if not .Values.persistence.storageClass }}
 kind: PersistentVolume
 apiVersion: v1
@@ -20,7 +21,7 @@ metadata:
   name: shared
 {{- if .Values.persistence.storageClass }}
   annotations:
-    volume.beta.kubernetes.io/storage-class: "{{ .Values.persistence.storageClass }}"
+    volume.beta.kubernetes.io/storage-class: {{ .Values.persistence.storageClass }}
 {{- end }}
 spec:
   accessModes:

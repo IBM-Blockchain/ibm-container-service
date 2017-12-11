@@ -1,3 +1,4 @@
+---
 {{- if not .Values.persistence.storageClass }}
 kind: PersistentVolume
 apiVersion: v1

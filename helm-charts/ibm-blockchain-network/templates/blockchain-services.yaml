@@ -9,10 +9,12 @@ spec:
   type: NodePort
   selector:
     name: ca
+    app: {{ template "ibm-blockchain-network.name" . }}
+    release: {{ .Release.Name }}
   ports:
   - protocol: TCP
     port: 7054
-    nodePort: 30054
+    nodePort: 30000
     name: grpc
 ---
 apiVersion: v1
@@ -25,6 +27,8 @@ spec:
   type: NodePort
   selector:
     name: orderer
+    app: {{ template "ibm-blockchain-network.name" . }}
+    release: {{ .Release.Name }}
   ports:
   - protocol: TCP
     port: 31010
@@ -41,13 +45,15 @@ spec:
   type: NodePort
   selector:
     name: org1peer1
+    app: {{ template "ibm-blockchain-network.name" . }}
+    release: {{ .Release.Name }}
   ports:
   - protocol: TCP
-    port: 30110
+    port: 5010
     nodePort: 30110
     name: grpc
   - protocol: TCP
-    port: 30111
+    port: 5011
     nodePort: 30111
     name: events
 ---
@@ -61,12 +67,14 @@ spec:
   type: NodePort
   selector:
     name: org2peer1
+    app: {{ template "ibm-blockchain-network.name" . }}
+    release: {{ .Release.Name }}
   ports:
   - protocol: TCP
-    port: 30210
+    port: 5010
     nodePort: 30210
     name: grpc
   - protocol: TCP
-    port: 30211
+    port: 5011
     nodePort: 30211
     name: events
