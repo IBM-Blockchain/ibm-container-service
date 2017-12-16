@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ .Release.Name }}-network-test
+  name: {{ .Release.Name }}-test
   labels:
     app: {{ template "ibm-blockchain-network.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
@@ -12,7 +12,7 @@ metadata:
     "helm.sh/hook": test-success
 spec:
   containers:
-  - name: {{ .Release.Name }}-network-test
-    image: {{ .Values.image }}
-    command: ["sh", "-c", "echo network test"]
+  - name: {{ .Release.Name }}-test
+    image: {{ .Values.blockchain.toolsImage }}
+    command: ["sh", "-c", "echo network test && exit 0"]
   restartPolicy: Never

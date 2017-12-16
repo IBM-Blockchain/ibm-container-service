@@ -37,4 +37,5 @@ resources: {}
   #  memory: 128Mi
 
 blockchain: 
+  toolsImage: ibmblockchain/fabric-tools:1.0.0
   pullPolicy: IfNotPresent

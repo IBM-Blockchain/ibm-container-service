@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ .Release.Name }}-channel-test
+  name: {{ .Release.Name }}-test
   labels:
     app: {{ template "ibm-blockchain-channel.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
@@ -12,7 +12,7 @@ metadata:
     "helm.sh/hook": test-success
 spec:
   containers:
-  - name: {{ .Release.Name }}-channel-test
-    image: {{ .Values.image }}
-    command: ["sh", "-c", "echo channel test"]
+  - name: {{ .Release.Name }}-test
+    image: {{ .Values.blockchain.toolsImage }}
+    command: ["sh", "-c", "echo channel test && exit 0"]
   restartPolicy: Never

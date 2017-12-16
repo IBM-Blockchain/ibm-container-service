@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ .Release.Name }}-composer-test
+  name: {{ .Release.Name }}-test
   labels:
     app: {{ template "ibm-blockchain-composer.name" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
@@ -12,7 +12,7 @@ metadata:
     "helm.sh/hook": test-success
 spec:
   containers:
-  - name: {{ .Release.Name }}-composer-test
-    image: {{ .Values.image }}
-    command: ["sh", "-c", "echo composer test"]
+  - name: {{ .Release.Name }}-test
+    image: {{ .Values.blockchain.toolsImage }}
+    command: ["sh", "-c", "echo composer test && exit 0"]
   restartPolicy: Never

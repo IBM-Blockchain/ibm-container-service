@@ -44,8 +44,9 @@ The following tables lists the configurable parameters of the IBM Blockchain cha
 
 |             Parameter               |               Description                  |                         Default                          |
 |-------------------------------------|--------------------------------------------|----------------------------------------------------------|
-| `blockchain.pullPolicy`             | Blockchain image pull policy               | `Always`                                                 |
-| `blockchain.composerRestServerCard` | card to use to connect to business network |                                                          | 
+| `blockchain.toolsImage`             | Blockchain tools image                     | `ibmblockchain/fabric-tools:1.0.0`                       |
+| `blockchain.pullPolicy`             | Blockchain image pull policy               | `IfNotPresent`                                           |
+| `blockchain.composerRestServerCard` | Card used to connect to business network   |                                                          |
 
 
 The above parameters map to the env variables defined in [IBM-Blockchain/ibm-container-service](https://github.ibm.com/IBM-Blockchain/ibm-container-service). For more information please refer to the [IBM-Blockchain/ibm-container-service](https://github.ibm.com/IBM-Blockchain/ibm-container-service) documentation.
