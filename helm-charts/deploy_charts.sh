@@ -70,6 +70,7 @@ function cleanEnvironment() {
         echo -n "Deleting the following helm releases: "
         echo ${HELM_RELEASES}...
         helm delete --purge ${HELM_RELEASES}
+        sleep 2
     fi
 
     # Wipe the /shared persistent volume if it exists (it should be removed with chart removal)
@@ -126,6 +127,9 @@ function checkPodStatus() {
 
             # Show the logs for failed pods
             for i in $(echo "$PODS" | grep Error | awk '{print $1}'); do
+                # colorEcho "\n$ kubectl describe pod ${i}" 132
+                # kubectl describe pod "${i}"
+
                 if [[ ${i} =~ .*channel-create.* ]]; then
                     colorEcho "\n$ kubectl logs ${i} createchanneltx" 132
                     kubectl logs "${i}" "createchanneltx"
@@ -138,11 +142,19 @@ function checkPodStatus() {
                 fi
             done
 
+
+            # Show the event warnings
+            # EVENT_WARNINGS=$(kubectl get events | grep Warning)
+            # if [[ ! -z ${EVENT_WARNINGS// /} ]]; then
+                # colorEcho "\n$ kubectl get events | grep Warning" 132
+                # echo "${EVENT_WARNINGS}"
+            # fi
+
             exit -1
         fi
 
         colorEcho "Waiting for the pods to initialize..." 134
-        sleep 1
+        sleep 2
 
         getPodStatus
     done

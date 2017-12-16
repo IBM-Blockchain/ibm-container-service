@@ -14,5 +14,10 @@ spec:
   containers:
   - name: {{ .Release.Name }}-test
     image: {{ .Values.blockchain.toolsImage }}
-    command: ["sh", "-c", "echo network test && exit 0"]
+    command: 
+      - sh
+      - -c
+      - |
+        echo {{ .Release.Name }}-test
+        exit 0
   restartPolicy: Never
