@@ -29,7 +29,7 @@ spec:
           claimName: {{ template "ibm-blockchain-composer-pvc.name" . }}
       containers:
       - name: composer-playground
-        image: hyperledger/composer-playground:0.16.0
+        image: ibmblockchain/composer-playground:0.16.2
         imagePullPolicy: {{ .Values.blockchain.pullPolicy }}
         volumeMounts:
         - name: composer-card-store

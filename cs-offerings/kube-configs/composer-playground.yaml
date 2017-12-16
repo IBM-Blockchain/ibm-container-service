@@ -16,7 +16,7 @@ spec:
           claimName: composer-pvc
       containers:
       - name: composer-playground
-        image: hyperledger/composer-playground:0.16.0
+        image: ibmblockchain/composer-playground:0.16.2
         imagePullPolicy: Always
         volumeMounts:
         - name: composer-card-store
