@@ -37,4 +37,4 @@ resources: {}
   #  memory: 128Mi
 
 blockchain: 
-  pullPolicy: Always
+  pullPolicy: IfNotPresent

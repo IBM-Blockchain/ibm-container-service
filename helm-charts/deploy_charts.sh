@@ -74,7 +74,7 @@ function cleanEnvironment() {
 
     # Wipe the /shared persistent volume if it exists (it should be removed with chart removal)
     kubectl get pv shared > /dev/null 2>&1
-    if [[ $? -eq 0 ]]; then
+    if [[ ${?} -eq 0 ]]; then
         kubectl create -f ../cs-offerings/kube-configs/wipe_shared.yaml
 
         # Wait for the wipe shared pod to finish
@@ -126,12 +126,12 @@ function checkPodStatus() {
 
             # Show the logs for failed pods
             for i in $(echo "$PODS" | grep Error | awk '{print $1}'); do
-                if [ "${i}" = "createchannel" ]; then
-                    colorEcho "\n$ kubectl logs ${i} ${i}tx" 132
-                    kubectl logs "${i}" "${i}tx"
+                if [[ ${i} =~ .*channel-create.* ]]; then
+                    colorEcho "\n$ kubectl logs ${i} createchanneltx" 132
+                    kubectl logs "${i}" "createchanneltx"
 
-                    colorEcho "\n$ kubectl logs ${i} ${i}" 132
-                    kubectl logs "${i}" "${i}"
+                    colorEcho "\n$ kubectl logs ${i} createchannel" 132
+                    kubectl logs "${i}" "createchannel"
                 else
                     colorEcho "\n$ kubectl logs ${i}" 132
                     kubectl logs "${i}"
@@ -151,6 +151,19 @@ function checkPodStatus() {
 }
 
 #
+# lintChart: Lints the helm chart in the current working directory.
+#
+function lintChart() {
+    LINT_OUTPUT=$(helm lint .)
+
+    if [[ ${?} -ne 0 ]]; then
+        colorEcho "\n$(basename $0): error: '$(basename $(pwd))' linting failed with errors:" 131
+        colorEcho "${LINT_OUTPUT}" 131
+        exit -1
+    fi
+}
+
+#
 # startNetwork: Starts the CA, orderer, and peer containers.
 #
 function startNetwork() {
@@ -162,9 +175,9 @@ function startNetwork() {
     pushd ibm-blockchain-network >/dev/null 2>&1
 
     # Install the chart
+    lintChart
     colorEcho "\n$ helm install --name ${RELEASE_NAME} ." 132
     helm install --name ${RELEASE_NAME} .
-
 
     # Ensure the correct number of pods are running and completed
     checkPodStatus ${TOTAL_RUNNING} ${TOTAL_COMPLETED}
@@ -184,9 +197,9 @@ function startChannel() {
     pushd ibm-blockchain-channel >/dev/null 2>&1
 
     # Install the chart
+    lintChart
     colorEcho "\n$ helm install --name ${RELEASE_NAME} ." 132
     helm install --name ${RELEASE_NAME} .
-
 
     # Ensure the correct number of pods are running and completed
     checkPodStatus ${TOTAL_RUNNING} ${TOTAL_COMPLETED}
@@ -206,6 +219,7 @@ function startChaincode() {
     pushd ibm-blockchain-chaincode >/dev/null 2>&1
 
     # Install the chart
+    lintChart
     colorEcho "\n$ helm install --name ${RELEASE_NAME} ." 132
     helm install --name ${RELEASE_NAME} .
 
@@ -227,6 +241,7 @@ function startComposer() {
     pushd ibm-blockchain-composer >/dev/null 2>&1
 
     # Install the chart
+    lintChart
     colorEcho "\n$ helm install --name ${RELEASE_NAME} ." 132
     helm install --name ${RELEASE_NAME} .
 

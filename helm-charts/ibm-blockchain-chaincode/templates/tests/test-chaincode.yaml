@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Release.Name }}-chaincode-test
+  labels:
+    app: {{ template "ibm-blockchain-chaincode.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+  - name: {{ .Release.Name }}-chaincode-test
+    image: {{ .Values.image }}
+    command: ["sh", "-c", "echo chaincode test"]
+  restartPolicy: Never

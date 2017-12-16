@@ -2,25 +2,35 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: composer-playground
+  name: {{ template "ibm-blockchain-composer.fullname" . }}-playground
+  labels:
+    app: {{ template "ibm-blockchain-composer.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   replicas: 1
   template:
     metadata:
+      name: {{ template "ibm-blockchain-composer.fullname" . }}-playground
       labels:
-        name: composer-playground
+        app: {{ template "ibm-blockchain-composer.name" . }}
+        chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+        name: {{ template "ibm-blockchain-composer.fullname" . }}-playground
     spec:
       volumes:
-      - name: shared
+      - name: {{ template "ibm-blockchain-shared-pvc.name" . }}
         persistentVolumeClaim:
-         claimName: shared
+         claimName: {{ template "ibm-blockchain-shared-pvc.name" . }}
       - name: composer-card-store
         persistentVolumeClaim:
-          claimName: composer-pvc
+          claimName: {{ template "ibm-blockchain-composer-pvc.name" . }}
       containers:
       - name: composer-playground
         image: hyperledger/composer-playground:0.16.0
-        imagePullPolicy: {{.Values.blockchain.pullPolicy}}
+        imagePullPolicy: {{ .Values.blockchain.pullPolicy }}
         volumeMounts:
         - name: composer-card-store
           mountPath: /home/composer/.composer

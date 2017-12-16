@@ -2,21 +2,37 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: composer-card-import
+  name: {{ template "ibm-blockchain-composer.fullname" . }}-card-import
+  labels:
+    app: {{ template "ibm-blockchain-composer.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   restartPolicy: "Never"
   volumes:
-  - name: shared
+  - name: {{ template "ibm-blockchain-shared-pvc.name" . }}
     persistentVolumeClaim:
-      claimName: shared
+      claimName: {{ template "ibm-blockchain-shared-pvc.name" . }}
   - name: composer-card-store
     persistentVolumeClaim:
-      claimName: composer-pvc
+      claimName: {{ template "ibm-blockchain-composer-pvc.name" . }}
   containers:
   - name: composer-card-import
     image: hyperledger/composer-cli:0.16.0
-    imagePullPolicy: {{.Values.blockchain.pullPolicy}}
-    command: ["sh", "-c", "while [ ! -f /shared/status_chaincodeinstantiate_complete ]; do echo Waiting for chaincodeinstantiate; sleep 2; done; echo $K8S_PROFILE > connection.json && composer card create -f PeerAdmin.card -p connection.json -u PeerAdmin -r PeerAdmin -r ChannelAdmin -c /shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem -k /shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/key.pem && composer card import -f PeerAdmin.card"]
+    imagePullPolicy: {{ .Values.blockchain.pullPolicy }}
+    command:
+      - sh
+      - -c
+      - |
+        while [ ! -f /shared/status_chaincodeinstantiate_complete ]; do
+          echo Waiting for chaincodeinstantiate
+          sleep 2
+        done
+
+        echo $K8S_PROFILE > connection.json &&
+        composer card create -f PeerAdmin.card -p connection.json -u PeerAdmin -r PeerAdmin -r ChannelAdmin -c /shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem -k /shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/key.pem &&
+        composer card import -f PeerAdmin.card
     env:
     - name: K8S_PROFILE
       value: >
@@ -25,17 +41,17 @@ spec:
           "name": "hlfv1",
           "orderers": [
               {
-                  "url": "grpc://blockchain-orderer:31010"
+                  "url": "grpc://ibm-blockchain-network-orderer:31010"
               }
           ],
           "ca": {
-              "url": "http://blockchain-ca:30054",
+              "url": "http://ibm-blockchain-network-ca:30054",
               "name": "CA1"
           },
           "peers": [
               {
-                  "requestURL": "grpc://blockchain-org1peer1:30110",
-                  "eventURL": "grpc://blockchain-org1peer1:30111"
+                  "requestURL": "grpc://ibm-blockchain-network-org1peer1:30110",
+                  "eventURL": "grpc://ibm-blockchain-network-org1peer1:30111"
               }
           ],
           "channel": "channel1",
@@ -45,6 +61,5 @@ spec:
     volumeMounts:
     - name: composer-card-store
       mountPath: /home/composer/.composer
-    - name: shared
+    - name: {{ template "ibm-blockchain-shared-pvc.name" . }}
       mountPath: /shared
-

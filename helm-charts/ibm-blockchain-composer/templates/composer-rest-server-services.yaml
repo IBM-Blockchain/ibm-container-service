@@ -3,13 +3,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: composer-rest-server
+  name: {{ template "ibm-blockchain-composer.fullname" . }}-rest-server
   labels:
-    run: composer-rest-server
+    app: {{ template "ibm-blockchain-composer.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    run: {{ template "ibm-blockchain-composer.fullname" . }}-rest-server
 spec:
   type: NodePort
   selector:
-    name: composer-rest-server
+    name: {{ template "ibm-blockchain-composer.fullname" . }}-rest-server
+    app: {{ template "ibm-blockchain-composer.name" . }}
+    release: {{ .Release.Name }}
   ports:
   - protocol: TCP
     port: 3000
