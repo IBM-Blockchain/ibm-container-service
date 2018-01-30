@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wipeshared-couchdb
+spec:
+  restartPolicy: "Never"
+  volumes:
+  - name: couchdb1
+    persistentVolumeClaim:
+      claimName: couchdb1-pvc
+  - name: couchdb2
+    persistentVolumeClaim:
+      claimName: couchdb2-pvc
+  containers:
+  - name: wipeshared-couchdb
+    image: ibmblockchain/fabric-tools:1.0.3
+    imagePullPolicy: Always
+    command: ["sh", "-c", "rm -rf /couchdb1/* /couchdb2/*"]
+    volumeMounts:
+    - name: couchdb1
+      mountPath: /couchdb1
+    - name: couchdb2
+      mountPath: /couchdb2
