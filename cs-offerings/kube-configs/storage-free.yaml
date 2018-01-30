@@ -31,6 +31,22 @@ spec:
     path: "/composer"
 
 ---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ledger-pv
+  labels:
+    type: local
+    name: ledger
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/ledger"
+
+---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -44,6 +60,7 @@ spec:
   selector:
     matchLabels:
       name: shared
+
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -58,3 +75,18 @@ spec:
   selector:
     matchLabels:
       name: composer
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ledger-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      name: ledger
