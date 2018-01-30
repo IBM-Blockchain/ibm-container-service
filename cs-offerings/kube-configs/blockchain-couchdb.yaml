@@ -367,12 +367,19 @@ spec:
       labels:
         name: couchdb1
     spec:
+      volumes:
+      - name: couchdb1
+        persistentVolumeClaim:
+          claimName: couchdb1-pvc
       containers:
       - name: couchdb1
         image: ibmblockchain/fabric-couchdb:1.0.3
         env:
         - name: DB_URL
           value: http://localhost:5984/member_db
+        volumeMounts:
+        - mountPath: /opt/couchdb/data
+          name: couchdb1
 
 ---
 apiVersion: extensions/v1beta1
@@ -386,9 +393,16 @@ spec:
       labels:
         name: couchdb2
     spec:
+      volumes:
+      - name: couchdb2
+        persistentVolumeClaim:
+          claimName: couchdb2-pvc
       containers:
       - name: couchdb2
         image: ibmblockchain/fabric-couchdb:1.0.3
         env:
         - name: DB_URL
           value: http://localhost:5984/member_db
+        volumeMounts:
+        - mountPath: /opt/couchdb/data
+          name: couchdb2

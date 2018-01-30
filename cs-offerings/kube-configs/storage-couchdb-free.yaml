@@ -1,0 +1,61 @@
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: couchdb1-pv
+  labels:
+    type: local
+    name: couchdb1
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/couchdb1"
+
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: couchdb2-pv
+  labels:
+    type: local
+    name: couchdb2
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/couchdb2"
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: couchdb1-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      name: couchdb1
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: couchdb2-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  selector:
+    matchLabels:
+      name: couchdb2
