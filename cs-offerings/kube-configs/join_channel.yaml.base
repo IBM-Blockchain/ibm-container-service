@@ -14,7 +14,7 @@ spec:
   - name: joinchannel
     image: ibmblockchain/fabric-peer:1.0.3
     imagePullPolicy: Always
-    command: ["sh", "-c", "peer channel fetch newest -o ${ORDERER_URL} -c ${CHANNEL_NAME} && peer channel join -b ${CHANNEL_NAME}_newest.block "]
+    command: ["sh", "-c", "peer channel fetch config -o ${ORDERER_URL} -c ${CHANNEL_NAME} && peer channel join -b ${CHANNEL_NAME}_config.block "]
     env:
     - name: CHANNEL_NAME
       value: %CHANNEL_NAME%
