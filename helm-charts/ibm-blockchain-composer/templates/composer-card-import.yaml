@@ -25,14 +25,9 @@ spec:
       - sh
       - -c
       - |
-        while [ ! -f /shared/status_chaincodeinstantiate_complete ]; do
-          echo Waiting for chaincodeinstantiate
-          sleep 2
-        done
-        
         echo $K8S_PROFILE > connection.json &&
         composer card create -f PeerAdmin.card -p connection.json -u PeerAdmin -r PeerAdmin -r ChannelAdmin -c /shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem -k /shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/key.pem &&
-        composer card import -f PeerAdmin.card"]
+        composer card import -f PeerAdmin.card
     env:
     - name: K8S_PROFILE
       value: >

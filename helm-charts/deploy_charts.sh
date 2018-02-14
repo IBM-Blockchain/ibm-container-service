@@ -269,6 +269,7 @@ function startComposer() {
 checkDependencies
 cleanEnvironment
 startNetwork
-startChannel
-startChaincode
-startComposer
+# startChannel
+# startChaincode
+# startComposer
+
