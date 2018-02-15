@@ -39,30 +39,9 @@ Use the following instructions to deploy each chart manually.
  >
  >Additional information can be obtained for a pod by using the command `kubectl logs <pod_name>`.
 
-1. Deploy the blockchain network chart by running the following commands:
+* Deploy the blockchain network chart by running the following commands:
 
-   ```bash
-   cd ibm-container-service/helm-charts/ibm-blockchain-network
-   helm install --name blockchain .
-   ```
-
-2. Deploy the blockchain channel chart by running the following commands:
-
-   ```bash
-   cd ibm-container-service/helm-charts/ibm-blockchain-channel
-   helm install --name channel .
-   ```
-
-3. Deploy the blockchain chaincode chart by running the following commands:
-
-   ```bash
-   cd ibm-container-service/helm-charts/ibm-blockchain-chaincode
-   helm install --name chaincode .
-   ```
-
-4. Deploy the Hyperledger Composer chart by running the following commands:
-
-   ```bash
-   cd ibm-container-service/helm-charts/ibm-blockchain-composer
-   helm install --name composer .
-   ```
+  ```bash
+  cd ibm-container-service/helm-charts/ibm-blockchain-network
+  helm install --name blockchain .
+  ```
