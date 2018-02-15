@@ -142,14 +142,6 @@ function checkPodStatus() {
                 fi
             done
 
-
-            # Show the event warnings
-            # EVENT_WARNINGS=$(kubectl get events | grep Warning)
-            # if [[ ! -z ${EVENT_WARNINGS// /} ]]; then
-                # colorEcho "\n$ kubectl get events | grep Warning" 132
-                # echo "${EVENT_WARNINGS}"
-            # fi
-
             exit -1
         fi
 
@@ -198,78 +190,9 @@ function startNetwork() {
 }
 
 #
-# startChannel: Starts the create and join channel containers.
-#
-function startChannel() {
-    RELEASE_NAME="channel"
-    TOTAL_RUNNING=4
-    TOTAL_COMPLETED=4
-
-    # Move into the directory
-    pushd ibm-blockchain-channel >/dev/null 2>&1
-
-    # Install the chart
-    lintChart
-    colorEcho "\n$ helm install --name ${RELEASE_NAME} ." 132
-    helm install --name ${RELEASE_NAME} .
-
-    # Ensure the correct number of pods are running and completed
-    checkPodStatus ${TOTAL_RUNNING} ${TOTAL_COMPLETED}
-
-    popd >/dev/null 2>&1
-}
-
-#
-# startChaincode: Starts the install and instantiate chaincode containers.
-#
-function startChaincode() {
-    RELEASE_NAME="chaincode"
-    TOTAL_RUNNING=4
-    TOTAL_COMPLETED=7
-
-    # Move into the directory
-    pushd ibm-blockchain-chaincode >/dev/null 2>&1
-
-    # Install the chart
-    lintChart
-    colorEcho "\n$ helm install --name ${RELEASE_NAME} ." 132
-    helm install --name ${RELEASE_NAME} .
-
-    # Ensure the correct number of pods are running and completed
-    checkPodStatus ${TOTAL_RUNNING} ${TOTAL_COMPLETED}
-
-    popd >/dev/null 2>&1
-}
-
-#
-# startComposer: Starts the Hyperledger Composer containers.
-#
-function startComposer() {
-    RELEASE_NAME="composer"
-    TOTAL_RUNNING=6
-    TOTAL_COMPLETED=8
-
-    # Move into the directory
-    pushd ibm-blockchain-composer >/dev/null 2>&1
-
-    # Install the chart
-    lintChart
-    colorEcho "\n$ helm install --name ${RELEASE_NAME} ." 132
-    helm install --name ${RELEASE_NAME} .
-
-    # Ensure the correct number of pods are running and completed
-    checkPodStatus ${TOTAL_RUNNING} ${TOTAL_COMPLETED}
-
-    popd >/dev/null 2>&1
-}
-
-#
 # Clean up and deploy the charts
 #
 checkDependencies
 cleanEnvironment
 startNetwork
-# startChannel
-# startChaincode
-# startComposer
 
