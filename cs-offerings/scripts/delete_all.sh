@@ -34,6 +34,7 @@ echo "=> DELETE_ALL: Deleting instantiate chaincode pod"
 echo ""
 echo "=> DELETE_ALL: Wiping the shared folder empty"
 ./wipe_shared.sh
+./wipe_shared_couchdb.sh
 
 echo ""
 echo "=> DELETE_ALL: Deleting persistent volume - call."

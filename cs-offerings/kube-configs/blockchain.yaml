@@ -70,11 +70,11 @@ spec:
       - name: shared
         persistentVolumeClaim:
           claimName: shared-pvc
+      - name: ledger
+        persistentVolumeClaim:
+          claimName: ledger-pvc
 
       containers:
-      - name: pulse
-        image: ibmblockchain/fabric-tools:1.0.3
-        command: ["sh", "-c", "sleep 1 && UUID=$(cat /proc/sys/kernel/random/uuid) && while [ true ]; do curl https://ics-endpoint.mybluemix.net/pulse/beat/$UUID; sleep 10; done"]
       - name: orderer
         image: ibmblockchain/fabric-orderer:1.0.3
         command: ["sh", "-c", "sleep 5 && while [ ! -f /shared/bootstrapped ]; do echo Waiting for bootstrap; sleep 1; done; orderer"]
@@ -84,7 +84,7 @@ spec:
         - name: ORDERER_GENERAL_LEDGERTYPE
           value: file
         - name: ORDERER_FILELEDGER_LOCATION
-          value: /mnt/ledger/orderer1
+          value: /ledger/orderer/fileledger
         - name: ORDERER_GENERAL_BATCHTIMEOUT
           value: 1s
         - name: ORDERER_GENERAL_BATCHSIZE_MAXMESSAGECOUNT
@@ -116,7 +116,11 @@ spec:
         volumeMounts:
         - mountPath: /shared
           name: shared
-
+        - mountPath: /ledger
+          name: ledger
+      - name: pulse
+        image: ibmblockchain/fabric-tools:1.0.3
+        command: ["sh", "-c", "sleep 1 && UUID=$(cat /proc/sys/kernel/random/uuid) && while [ true ]; do curl https://ics-endpoint.mybluemix.net/pulse/beat/$UUID; sleep 10; done"]
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -175,6 +179,9 @@ spec:
       - name: shared
         persistentVolumeClaim:
           claimName: shared-pvc
+      - name: ledger
+        persistentVolumeClaim:
+          claimName: ledger-pvc
       - name: dockersocket
         hostPath:
           path: /var/run/docker.sock
@@ -232,6 +239,8 @@ spec:
           value: "false"
         - name: CORE_LEDGER_STATE_STATEDATABASE
           value: goleveldb
+        - name: CORE_PEER_FILESYSTEMPATH
+          value: /ledger/org1/peer1/ledger
         - name: FABRIC_CFG_PATH
           value: /etc/hyperledger/fabric/
         - name: ORDERER_URL
@@ -243,6 +252,8 @@ spec:
         volumeMounts:
         - mountPath: /shared
           name: shared
+        - mountPath: /ledger
+          name: ledger
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
 ---
@@ -261,6 +272,9 @@ spec:
       - name: shared
         persistentVolumeClaim:
           claimName: shared-pvc
+      - name: ledger
+        persistentVolumeClaim:
+          claimName: ledger-pvc
       - name: dockersocket
         hostPath:
           path: /var/run/docker.sock
@@ -298,6 +312,8 @@ spec:
           value: Org2MSP
         - name: CORE_PEER_MSPCONFIGPATH
           value: /shared/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp/
+        - name: CORE_PEER_FILESYSTEMPATH
+          value: /ledger/org2/peer1/ledger
         - name: CORE_LOGGING_LEVEL
           value: debug
         - name: CORE_LOGGING_PEER
@@ -329,5 +345,7 @@ spec:
         volumeMounts:
         - mountPath: /shared
           name: shared
+        - mountPath: /ledger
+          name: ledger
         - mountPath: /host/var/run/docker.sock
           name: dockersocket

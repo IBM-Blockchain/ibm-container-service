@@ -38,6 +38,9 @@ if [ "${DELETE_VOLUMES}" == "true" ]; then
 	echo "Deleting Persistant Storage"
 	echo "Running: kubectl delete -f ${KUBECONFIG_FOLDER}/storage-${OFFERING}.yaml"
 	kubectl delete -f ${KUBECONFIG_FOLDER}/storage-${OFFERING}.yaml
+
+	echo "Running kubectl delete -f ${KUBECONFIG_FOLDER}/storage-couchdb-${OFFERING}.yaml"
+	kubectl delete -f ${KUBECONFIG_FOLDER}/storage-couchdb-${OFFERING}.yaml
 else
 	echo "-i | --include-volumes not included in the command, will not delete storage/volumes."
 fi
