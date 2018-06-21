@@ -44,7 +44,7 @@ spec:
             done
 
             touch /shared/status_org2peer1_complete &&
-            peer node start --peer-defaultchain=false
+            peer node start
         env:
         - name: CORE_PEER_ADDRESSAUTODETECT
           value: "true"
