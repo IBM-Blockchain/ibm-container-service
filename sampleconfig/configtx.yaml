@@ -8,24 +8,30 @@
 #
 ################################################################################
 Profiles:
-
     TwoOrgsOrdererGenesis:
+        Capabilities:
+            <<: *ChannelCapabilities
         Orderer:
             <<: *OrdererDefaults
             Organizations:
                 - *OrdererOrg
+
+            Capabilities:
+             <<: *OrdererCapabilities
         Consortiums:
             SampleConsortium:
                 Organizations:
                     - *Org1
                     - *Org2
+
     TwoOrgsChannel:
         Consortium: SampleConsortium
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *Org1
-                - *Org2
+               - *Org1
+               - *Org2
+
 
 ################################################################################
 #
@@ -37,67 +43,32 @@ Profiles:
 ################################################################################
 Organizations:
 
-    # SampleOrg defines an MSP using the sampleconfig.  It should never be used
-    # in production but may be used as a template for other definitions
     - &OrdererOrg
-        # DefaultOrg defines the organization which is used in the sampleconfig
-        # of the fabric.git development environment
         Name: OrdererOrg
-
-        # ID to load the MSP definition as
         ID: OrdererMSP
-
-        # MSPDir is the filesystem path which contains the MSP configuration
         MSPDir: crypto-config/ordererOrganizations/example.com/msp
-
-        # AdminPrincipal dictates the type of principal used for an organization's Admins policy
-        # Today, only the values of Role.ADMIN ad Role.MEMBER are accepted, which indicates a principal
-        # of role type ADMIN and role type MEMBER respectively
         AdminPrincipal: Role.MEMBER
+
 
     - &Org1
-        # DefaultOrg defines the organization which is used in the sampleconfig
-        # of the fabric.git development environment
         Name: Org1MSP
-
-        # ID to load the MSP definition as
         ID: Org1MSP
-
         MSPDir: crypto-config/peerOrganizations/org1.example.com/msp
-
-        # AdminPrincipal dictates the type of principal used for an organization's Admins policy
-        # Today, only the values of Role.ADMIN ad Role.MEMBER are accepted, which indicates a principal
-        # of role type ADMIN and role type MEMBER respectively
         AdminPrincipal: Role.MEMBER
 
         AnchorPeers:
-            # AnchorPeers defines the location of peers which can be used
-            # for cross org gossip communication.  Note, this value is only
-            # encoded in the genesis block in the Application section context
             - Host: blockchain-org1peer1
               Port: 30110
-
     - &Org2
-        # DefaultOrg defines the organization which is used in the sampleconfig
-        # of the fabric.git development environment
         Name: Org2MSP
-
-        # ID to load the MSP definition as
         ID: Org2MSP
-
         MSPDir: crypto-config/peerOrganizations/org2.example.com/msp
-
-        # AdminPrincipal dictates the type of principal used for an organization's Admins policy
-        # Today, only the values of Role.ADMIN ad Role.MEMBER are accepted, which indicates a principal
-        # of role type ADMIN and role type MEMBER respectively
         AdminPrincipal: Role.MEMBER
 
         AnchorPeers:
-            # AnchorPeers defines the location of peers which can be used
-            # for cross org gossip communication.  Note, this value is only
-            # encoded in the genesis block in the Application section context
             - Host: blockchain-org2peer1
               Port: 30210
+
 
 ################################################################################
 #
@@ -109,39 +80,19 @@ Organizations:
 ################################################################################
 Orderer: &OrdererDefaults
 
-    # Orderer Type: The orderer implementation to start
-    # Available types are "solo" and "kafka"
     OrdererType: solo
-
     Addresses:
         - blockchain-orderer:31010
 
-    # Batch Timeout: The amount of time to wait before creating a batch
     BatchTimeout: 2s
-
-    # Batch Size: Controls the number of messages batched into a block
     BatchSize:
-
-        # Max Message Count: The maximum number of messages to permit in a batch
         MaxMessageCount: 10
-
-        # Absolute Max Bytes: The absolute maximum number of bytes allowed for
-        # the serialized messages in a batch.
         AbsoluteMaxBytes: 99 MB
-
-        # Preferred Max Bytes: The preferred maximum number of bytes allowed for
-        # the serialized messages in a batch. A message larger than the preferred
-        # max bytes will result in a batch larger than preferred max bytes.
         PreferredMaxBytes: 512 KB
-
+    MaxChannels: 1000
     Kafka:
-        # Brokers: A list of Kafka brokers to which the orderer connects
-        # NOTE: Use IP:port notation
         Brokers:
-            - 127.0.0.1:9092
 
-    # Organizations is the list of orgs which are defined as participants on
-    # the orderer side of the network
     Organizations:
 
 ################################################################################
@@ -153,8 +104,48 @@ Orderer: &OrdererDefaults
 #
 ################################################################################
 Application: &ApplicationDefaults
-
-    # Organizations is the list of orgs which are defined as participants on
-    # the application side of the network
     Organizations:
 
+Capabilities:
+    # Channel capabilities apply to both the orderers and the peers and must be
+    # supported by both.  Set the value of the capability to true to require it.
+    Channel: &ChannelCapabilities
+        # V1.1 for Channel is a catchall flag for behavior which has been
+        # determined to be desired for all orderers and peers running v1.0.x,
+        # but the modification of which would cause incompatibilities.  Users
+        # should leave this flag set to true.
+        V1_1: true
+    # Orderer capabilities apply only to the orderers, and may be safely
+    # manipulated without concern for upgrading peers.  Set the value of the
+    # capability to true to require it.
+    Orderer: &OrdererCapabilities
+        # V1.1 for Order is a catchall flag for behavior which has been
+        # determined to be desired for all orderers running v1.0.x, but the
+        # modification of which  would cause incompatibilities.  Users should
+        # leave this flag set to true.
+        V1_1: true
+    # Application capabilities apply only to the peer network, and may be safely
+    # manipulated without concern for upgrading orderers.  Set the value of the
+    # capability to true to require it.
+    Application: &ApplicationCapabilities
+        # V1.1 for Application is a catchall flag for behavior which has been
+        # determined to be desired for all peers running v1.0.x, but the
+        # modification of which would cause incompatibilities.  Users should
+        # leave this flag set to true.
+        V1_1: true
+        # V1_1_PVTDATA_EXPERIMENTAL is an Application capability to enable the
+        # private data capability.  It is only supported when using peers built
+        # with experimental build tag.  When set to true, private data
+        # collections can be configured upon chaincode instantiation and
+        # utilized within chaincode Invokes.
+        # Note that use of this feature with non "experimental" binaries on
+        # the network may cause a fork.
+        V1_1_PVTDATA_EXPERIMENTAL: false
+        # V1_1_RESOURCETREE_EXPERIMENTAL is an Application capability to enable the
+        # resources capability. Currently this is needed for defining resource based
+        # access control (RBAC). RBAC helps set fine-grained access control on system
+        # resources such as the endorser and various system chaincodes. Default is V1.0
+        # based access control based on CHANNEL_READERS and CHANNEL_WRITERS
+        # Note that use of this feature with non "experimental" binaries on
+        # the network may cause a fork.
+        V1_1_RESOURCETREE_EXPERIMENTAL: false
