@@ -39,11 +39,11 @@ while [ "$(kubectl get pod composer-card-import | grep composer-card-import | aw
     sleep 1;
 done
 
-if [ "$(kubectl get pod composer-card-import | grep composer-card-import | awk '{print $3}')" == "Completed" ]; then
+if [ "$(kubectl get pods composer-card-import | grep composer-card-import | awk '{print $3}')" == "Completed" ]; then
 	echo "Composer Card Import Completed Successfully"
 fi
 
-if [ "$(kubectl get pod composer-card-import | grep composer-card-import | awk '{print $3}')" != "Completed" ]; then
+if [ "$(kubectl get pods composer-card-import | grep composer-card-import | awk '{print $3}')" != "Completed" ]; then
 	echo "Composer Card Import Failed"
 fi
 

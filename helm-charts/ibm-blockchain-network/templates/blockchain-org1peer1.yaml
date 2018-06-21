@@ -60,6 +60,10 @@ spec:
           value: "true"
         - name: CORE_PEER_PROFILE_ENABLED
           value: "true"
+        - name: CORE_PEER_GOSSIP_USELEADERELECTION:
+          value: "true"
+        - name: CORE_PEER_GOSSIP_ORGLEADER:
+          value: "false"
         - name: CORE_PEER_DISCOVERY_PERIOD
           value: 60s
         - name: CORE_PEER_DISCOVERY_TOUCHPERIOD
@@ -103,4 +107,3 @@ spec:
           name: {{ template "ibm-blockchain-shared-pvc.name" . }}
         - mountPath: /host/var/run/docker.sock
           name: dockersocket
-

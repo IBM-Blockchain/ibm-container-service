@@ -14,7 +14,7 @@
 	```bash
 	cryptogen generate --config /sampleconfig/crypto-config.yaml
 	```
-	
+
 	`cryptogen` is the tool that Hyperledger Fabric provides to generate crypto-material in a particular directory format that the components expect, for ease of setting up a basic network. More details can be found on [Hyperledger Fabric docs for crypto-gen](http://hyperledger-fabric.readthedocs.io/en/latest/build_network.html?highlight=cryptogen#crypto-generator).
 
 
@@ -22,7 +22,7 @@
 
 	```
 	name: cryptogen
-		image: ibmblockchain/fabric-tools:1.0.3
+		image: ibmblockchain/fabric-tools:1.1.0
 		imagePullPolicy: Always
 		command: ["sh", "-c", "cryptogen generate --config /sampleconfig/crypto-config.yaml && cp -r crypto-config /shared/ && for file in $(find /shared/ -iname *_sk); do dir=$(dirname $file); mv ${dir /*_sk ${dir}/key.pem; done && find /shared -type d | xargs chmod a+rx &&  find /shared -type f | xargs chmod a+r && touch /shared/status_cryptogen_complete "]
 		volumeMounts:
@@ -42,7 +42,7 @@
 	From kubernetes point of view, in the utils pods, a container named `configtxgen` is defined which uses the same command as described above to generate orderer genesis block. Here is the block from [blockchain.yaml](../../kube-configs/blockchain.yaml)
 	```
 	name: configtxgen
-		image: ibmblockchain/fabric-tools:1.0.3
+		image: ibmblockchain/fabric-tools:1.1.0
 		imagePullPolicy: Always
 		command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_cryptogen_complete ]; do echo Waiting for cryptogen; sleep 1; done; cp /sampleconfig/configtx.yaml 	/shared/configtx.yaml; cd /shared/; configtxgen -profile TwoOrgsOrdererGenesis -outputBlock orderer.block && find /shared -type d | xargs chmod a+rx && find /shared -type f | xargs chmod a+r && touch /shared/status_configtxgen_complete && rm /shared/status_cryptogen_complete"]
 		env:
@@ -67,10 +67,7 @@
 
 ## Fabric CA configs (ca.yaml's)
 
-- The fabric-ca now has capability to run more than one instances of the ca-server in the same process. This means that we need to pass all those yamls to start multiple ca-servers inside the same kubernetes container. These yamls can be found in the tools images in `/sampleconfig/cas`, there are 3 yamls one for orderer-org CA and one each for two peer-org's CA. 
+- The fabric-ca now has capability to run more than one instances of the ca-server in the same process. This means that we need to pass all those yamls to start multiple ca-servers inside the same kubernetes container. These yamls can be found in the tools images in `/sampleconfig/cas`, there are 3 yamls one for orderer-org CA and one each for two peer-org's CA.
 	* [Orderer-org CA](./cas/ca.yaml)
 	* [Peer-org1 CA](./cas/org1/ca.yaml)
 	* [Peer-org2 CA](./cas/org2/ca.yaml)
-
-
-	

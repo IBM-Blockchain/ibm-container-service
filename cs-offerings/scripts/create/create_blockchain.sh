@@ -65,7 +65,7 @@ while [ "${NUMPENDING}" != "0" ]; do
     sleep 1
 done
 
-UTILSSTATUS=$(kubectl get pods utils | grep utils | awk '{print $3}')
+UTILSSTATUS=$(kubectl get pods -a utils | grep utils | awk '{print $3}')
 while [ "${UTILSSTATUS}" != "Completed" ]; do
     echo "Waiting for Utils pod to start completion. Status = ${UTILSSTATUS}"
     if [ "${UTILSSTATUS}" == "Error" ]; then
