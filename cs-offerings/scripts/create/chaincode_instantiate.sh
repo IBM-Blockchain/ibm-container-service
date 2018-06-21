@@ -8,13 +8,13 @@ else
     echo "Please run the script from 'scripts' or 'scripts/create' folder"
 fi
 
-# Default to channel1 if not defined
+# Default to composerchannel if not defined
 if [ -z "${CHANNEL_NAME}" ]; then
-	echo "CHANNEL_NAME not defined. I will use \"channel1\"."
+	echo "CHANNEL_NAME not defined. I will use \"composerchannel\"."
 	echo "I will wait 5 seconds before continuing."
 	sleep 5
 fi
-CHANNEL_NAME=${CHANNEL_NAME:-channel1}
+CHANNEL_NAME=${CHANNEL_NAME:-composerchannel}
 
 # Default to peer 1's address if not defined
 if [ -z "${PEER_ADDRESS}" ]; then
@@ -68,15 +68,15 @@ echo "Creating chaincodeinstantiate pod"
 echo "Running: kubectl create -f ${KUBECONFIG_FOLDER}/chaincode_instantiate.yaml"
 kubectl create -f ${KUBECONFIG_FOLDER}/chaincode_instantiate.yaml
 
-while [ "$(kubectl get pod chaincodeinstantiate | grep chaincodeinstantiate | awk '{print $3}')" != "Completed" ]; do
+while [ "$(kubectl get pods chaincodeinstantiate | grep chaincodeinstantiate | awk '{print $3}')" != "Completed" ]; do
     echo "Waiting for chaincodeinstantiate container to be Completed"
     sleep 1;
 done
 
-if [ "$(kubectl get pod chaincodeinstantiate | grep chaincodeinstantiate | awk '{print $3}')" == "Completed" ]; then
+if [ "$(kubectl get pods chaincodeinstantiate | grep chaincodeinstantiate | awk '{print $3}')" == "Completed" ]; then
 	echo "Instantiate Chaincode Completed Successfully"
 fi
 
-if [ "$(kubectl get pod chaincodeinstantiate | grep chaincodeinstantiate | awk '{print $3}')" != "Completed" ]; then
+if [ "$(kubectl get pods chaincodeinstantiate | grep chaincodeinstantiate | awk '{print $3}')" != "Completed" ]; then
 	echo "Instantiate Chaincode Failed"
 fi

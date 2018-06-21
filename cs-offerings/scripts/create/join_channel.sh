@@ -24,13 +24,13 @@ if [ -z ${PEER_MSPID} ]; then
 fi
 PEER_MSPID=${PEER_MSPID:-Org1MSP}
 
-# Default to "channel1" if not defined
+# Default to "composerchannel" if not defined
 if [ -z "${CHANNEL_NAME}" ]; then
-	echo "CHANNEL_NAME not defined. I will use \"channel1\"."
+	echo "CHANNEL_NAME not defined. I will use \"composerchannel\"."
 	echo "I will wait 5 seconds before continuing."
 	sleep 5
 fi
-CHANNEL_NAME=${CHANNEL_NAME:-channel1}
+CHANNEL_NAME=${CHANNEL_NAME:-composerchannel}
 
 # Default to "admin for peer1" if not defined
 if [ -z "${MSP_CONFIGPATH}" ]; then
@@ -51,7 +51,7 @@ echo "Creating joinchannel pod"
 echo "Running: kubectl create -f ${KUBECONFIG_FOLDER}/join_channel.yaml"
 kubectl create -f ${KUBECONFIG_FOLDER}/join_channel.yaml
 
-while [ "$(kubectl get pod joinchannel | grep joinchannel | awk '{print $3}')" != "Completed" ]; do
+while [ "$(kubectl get pods joinchannel | grep joinchannel | awk '{print $3}')" != "Completed" ]; do
     echo "Waiting for joinchannel container to be Completed"
     sleep 1;
 done
