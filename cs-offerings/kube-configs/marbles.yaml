@@ -16,7 +16,7 @@ spec:
           claimName: shared-pvc
       containers:
       - name: marbles-demo
-        image: dhyeyibm/container-service-marbles:1.0.1
+        image: ibmblockchain/container-service-marbles:1.0.1
         imagePullPolicy: Always
         command: ["sh", "-c", "cp /shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/key.pem /app/config/org1_admin_key.pem && cp /shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem /app/config/org1_admin_cert.pem && node scripts/install_chaincode.js marbles_cs.json && sleep 10 && node scripts/instantiate_chaincode.js marbles_cs.json && sleep 10 && gulp marbles_cs"]
         volumeMounts:

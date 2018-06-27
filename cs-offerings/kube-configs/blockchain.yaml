@@ -199,6 +199,8 @@ spec:
         - name: CORE_PEER_GOSSIP_BOOTSTRAP
           value: blockchain-org1peer1:30110
         - name: CORE_PEER_GOSSIP_ORGLEADER
+          value: "false"
+        - name: CORE_PEER_GOSSIP_USELEADERELECTION
           value: "true"
         - name: CORE_PEER_GOSSIP_SKIPHANDSHAKE
           value: "true"
@@ -285,6 +287,8 @@ spec:
         - name: CORE_PEER_GOSSIP_BOOTSTRAP
           value: blockchain-org2peer1:30210
         - name: CORE_PEER_GOSSIP_ORGLEADER
+          value: "false"
+        - name: CORE_PEER_GOSSIP_USELEADERELECTION
           value: "true"
         - name: CORE_PEER_GOSSIP_SKIPHANDSHAKE
           value: "true"
