@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: prep
+spec:
+  restartPolicy: "Never"
+  volumes:
+  - name: shared
+    persistentVolumeClaim:
+      claimName: shared-pvc
+  - name: dockersocket
+    hostPath:
+      path: /var/run/docker.sock
+  containers:
+  - name: bootstrap
+    image: ibmblockchain/fabric-tools:1.1.0
+    imagePullPolicy: Always
+    command: ["sh", "-c", "sleep 100000" ]
+    volumeMounts:
+    - mountPath: /shared
+      name: shared

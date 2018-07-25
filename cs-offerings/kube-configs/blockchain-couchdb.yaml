@@ -19,14 +19,14 @@ spec:
   - name: cryptogen
     image: ibmblockchain/fabric-tools:1.1.0
     imagePullPolicy: Always
-    command: ["sh", "-c", "cryptogen generate --config /sampleconfig/crypto-config.yaml && cp -r crypto-config /shared/ && for file in $(find /shared/ -iname *_sk); do dir=$(dirname $file); mv ${dir}/*_sk ${dir}/key.pem; done && find /shared -type d | xargs chmod a+rx && find /shared -type f | xargs chmod a+r && touch /shared/status_cryptogen_complete "]
+    command: ["sh", "-c", "cryptogen generate --config /shared/config/crypto-config.yaml && cp -r crypto-config /shared/ && for file in $(find /shared/ -iname *_sk); do dir=$(dirname $file); mv ${dir}/*_sk ${dir}/key.pem; done && find /shared -type d | xargs chmod a+rx && find /shared -type f | xargs chmod a+r && touch /shared/status_cryptogen_complete "]
     volumeMounts:
     - mountPath: /shared
       name: shared
   - name: configtxgen
     image: ibmblockchain/fabric-tools:1.1.0
     imagePullPolicy: Always
-    command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_cryptogen_complete ]; do echo Waiting for cryptogen; sleep 1; done; cp /sampleconfig/configtx.yaml /shared/configtx.yaml; cd /shared/; configtxgen -profile TwoOrgsOrdererGenesis -outputBlock orderer.block && find /shared -type d | xargs chmod a+rx && find /shared -type f | xargs chmod a+r && touch /shared/status_configtxgen_complete && rm /shared/status_cryptogen_complete"]
+    command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_cryptogen_complete ]; do echo Waiting for cryptogen; sleep 1; done; cp /shared/config/configtx.yaml /shared/configtx.yaml; cd /shared/; configtxgen -profile TwoOrgsOrdererGenesis -outputBlock orderer.block && find /shared -type d | xargs chmod a+rx && find /shared -type f | xargs chmod a+r && touch /shared/status_configtxgen_complete && rm /shared/status_cryptogen_complete"]
     env:
      - name: PEERHOST1
        value: blockchain-org1peer1
@@ -48,7 +48,7 @@ spec:
   - name: bootstrap
     image: ibmblockchain/fabric-tools:1.1.0
     imagePullPolicy: Always
-    command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done && cp -r /sampleconfig/cas /shared && touch /shared/bootstrapped && rm /shared/status_configtxgen_complete && mkdir -p /home/composer/.composer && chown 1000 /home/composer/.composer && echo 'Done with bootstrapping'" ]
+    command: ["sh", "-c", "sleep 1 && while [ ! -f /shared/status_configtxgen_complete ]; do echo Waiting for configtxgen; sleep 1; done && cp -r /shared/config/cas /shared && touch /shared/bootstrapped && rm /shared/status_configtxgen_complete && mkdir -p /home/composer/.composer && chown 1000 /home/composer/.composer && echo 'Done with bootstrapping'" ]
     volumeMounts:
     - mountPath: /shared
       name: shared
@@ -200,6 +200,8 @@ spec:
           value: blockchain-org1peer1:30110
         - name: CORE_PEER_GOSSIP_ORGLEADER
           value: "true"
+        - name: CORE_PEER_GOSSIP_USELEADERELECTION
+          value: "false"
         - name: CORE_PEER_GOSSIP_SKIPHANDSHAKE
           value: "true"
         - name: CORE_PEER_COMMITTER_ENABLED
@@ -288,6 +290,8 @@ spec:
           value: blockchain-org2peer1:30210
         - name: CORE_PEER_GOSSIP_ORGLEADER
           value: "true"
+        - name: CORE_PEER_GOSSIP_USELEADERELECTION
+          value: "false"
         - name: CORE_PEER_GOSSIP_SKIPHANDSHAKE
           value: "true"
         - name: CORE_PEER_COMMITTER_ENABLED
@@ -350,7 +354,7 @@ spec:
     spec:
       containers:
       - name: couchdb1
-        image: ibmblockchain/fabric-couchdb:0.4.6
+        image: ibmblockchain/fabric-couchdb:0.4.10
         env:
         - name: DB_URL
           value: http://localhost:5984/member_db
@@ -369,7 +373,7 @@ spec:
     spec:
       containers:
       - name: couchdb2
-        image: ibmblockchain/fabric-couchdb:0.4.6
+        image: ibmblockchain/fabric-couchdb:0.4.10
         env:
         - name: DB_URL
           value: http://localhost:5984/member_db
