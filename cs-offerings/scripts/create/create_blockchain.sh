@@ -45,6 +45,27 @@ else
     kubectl create -f ${KUBECONFIG_FOLDER}/blockchain-services-${OFFERING}.yaml
 fi
 
+echo "Running: kubectl create -f ${KUBECONFIG_FOLDER}/blockchain-prep.yaml"
+kubectl create -f ${KUBECONFIG_FOLDER}/blockchain-prep.yaml
+
+PREPSTATUS=$(kubectl get pods -a prep | grep prep | awk '{print $3}')
+while [ "${PREPSTATUS}" != "Running" ]; do
+    echo "Waiting for Prep pod to start completion. Status = ${PREPSTATUS}"
+    if [ "${PREPSTATUS}" == "Error" ]; then
+        echo "There is an error in prep pod. Please run 'kubectl logs prep' or 'kubectl describe pod prep'."
+        exit 1
+    fi
+    PREPSTATUS=$(kubectl get pods -a prep | grep prep | awk '{print $3}')
+done
+
+sleep 2
+
+echo "Prep: Copying configuration data to shared volume"
+test -d "config" && echo Exists || echo Does not exist
+kubectl cp config prep:/shared/config
+
+echo "Prep: Removing container"
+kubectl delete -f ${KUBECONFIG_FOLDER}/blockchain-prep.yaml
 
 echo "Creating new Deployment"
 if [ "${WITH_COUCHDB}" == "true" ]; then

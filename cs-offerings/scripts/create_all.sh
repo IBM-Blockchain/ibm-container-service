@@ -10,7 +10,7 @@ else
 fi
 
 echo "clearing all old pods"
-./delete_all.sh
+#./delete_all.sh
 
 echo ""
 echo "=> CREATE_ALL: Creating storage"
@@ -33,7 +33,7 @@ CHANNEL_NAME="composerchannel" PEER_MSPID="Org2MSP" PEER_ADDRESS="blockchain-org
 
 echo ""
 echo "=> CREATE_ALL: Creating composer playground"
-create/create_composer-playground.sh $@
+#create/create_composer-playground.sh $@
 
 # Can't create this until the user has performed manual actions in the Composer Playground.
 # echo ""
@@ -42,12 +42,12 @@ create/create_composer-playground.sh $@
 
 echo ""
 echo "=> CREATE_ALL: Running Install Chaincode on Org1 Peer1"
-CHAINCODE_NAME="example02" CHAINCODE_VERSION="v1" MSP_CONFIGPATH="/shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp"  PEER_MSPID="Org1MSP" PEER_ADDRESS="blockchain-org1peer1:30110" create/chaincode_install.sh
+CHAINCODE_NAME="sacc" CHAINCODE_VERSION="v1" MSP_CONFIGPATH="/shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp"  PEER_MSPID="Org1MSP" PEER_ADDRESS="blockchain-org1peer1:30110" create/chaincode_install.sh
 
 echo ""
 echo "=> CREATE_ALL: Running Install Chaincode on Org2 Peer1"
-CHAINCODE_NAME="example02" CHAINCODE_VERSION="v1" MSP_CONFIGPATH="/shared/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp"  PEER_MSPID="Org2MSP" PEER_ADDRESS="blockchain-org2peer1:30210" create/chaincode_install.sh
+CHAINCODE_NAME="sacc" CHAINCODE_VERSION="v1" MSP_CONFIGPATH="/shared/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp"  PEER_MSPID="Org2MSP" PEER_ADDRESS="blockchain-org2peer1:30210" create/chaincode_install.sh
 
 echo ""
 echo "=> CREATE_ALL: Running instantiate chaincode on channel \"composerchannel\" using \"Org1MSP\""
-CHANNEL_NAME="composerchannel" CHAINCODE_NAME="example02" CHAINCODE_VERSION="v1" MSP_CONFIGPATH="/shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp"  PEER_MSPID="Org1MSP" PEER_ADDRESS="blockchain-org1peer1:30110" create/chaincode_instantiate.sh
+CHANNEL_NAME="composerchannel" CHAINCODE_NAME="sacc" CHAINCODE_VERSION="v1" MSP_CONFIGPATH="/shared/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp"  PEER_MSPID="Org1MSP" PEER_ADDRESS="blockchain-org1peer1:30110" create/chaincode_instantiate.sh
