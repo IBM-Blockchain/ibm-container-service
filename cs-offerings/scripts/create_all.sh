@@ -33,7 +33,7 @@ CHANNEL_NAME="composerchannel" PEER_MSPID="Org2MSP" PEER_ADDRESS="blockchain-org
 
 echo ""
 echo "=> CREATE_ALL: Creating composer playground"
-#create/create_composer-playground.sh $@
+create/create_composer-playground.sh $@
 
 # Can't create this until the user has performed manual actions in the Composer Playground.
 # echo ""
