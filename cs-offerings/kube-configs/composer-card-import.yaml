@@ -26,19 +26,19 @@ spec:
           "version": "1.0.0",
           "peers": {
             "peer0.org1.example.com": {
-                "url": "grpc://localhost:7051",
-                "eventUrl": "grpc://localhost:7053"
+                "url": "grpc://blockchain-org1peer1:30110",
+                "eventUrl": "grpc://blockchain-org1peer1:30111"
               }
             },
-            "ca.org1.example.com": {
-              "url": "http://localhost:7054",
-              "certificateAuthorities": {
-              "caName": "ca.org1.example.com"
-            }
+            "certificateAuthorities": {
+              "ca.org1.example.com": {
+                "url": "http://blockchain-ca:30054",
+                "caName": "CA1"
+              }
           },
           "orderers": {
             "orderer.example.com": {
-              "url": "grpc://localhost:7050"
+              "url": "grpc://blockchain-orderer:31010"
             }
           },
           "organizations": {
