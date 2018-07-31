@@ -354,7 +354,7 @@ spec:
     spec:
       containers:
       - name: couchdb1
-        image: ibmblockchain/fabric-couchdb:0.4.10
+        image: ibmblockchain/fabric-couchdb:0.4.6
         env:
         - name: DB_URL
           value: http://localhost:5984/member_db
@@ -373,7 +373,7 @@ spec:
     spec:
       containers:
       - name: couchdb2
-        image: ibmblockchain/fabric-couchdb:0.4.10
+        image: ibmblockchain/fabric-couchdb:0.4.6
         env:
         - name: DB_URL
           value: http://localhost:5984/member_db
