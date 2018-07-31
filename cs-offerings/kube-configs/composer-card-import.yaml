@@ -30,11 +30,11 @@ spec:
                 "eventUrl": "grpc://blockchain-org1peer1:30111"
               }
             },
-            "certificateAuthorities": {
-              "ca.org1.example.com": {
-                "url": "http://blockchain-ca:30054",
-                "caName": "CA1"
-              }
+          "certificateAuthorities": {
+            "ca.org1.example.com": {
+              "url": "http://blockchain-ca:30054",
+              "caName": "CA1"
+            }
           },
           "orderers": {
             "orderer.example.com": {
